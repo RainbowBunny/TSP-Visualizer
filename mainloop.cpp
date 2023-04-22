@@ -13,8 +13,14 @@ enum GameState {
 
 MainLoop::MainLoop(SDL_Renderer* &renderer, Gallery &gallery) {
     menu = loadMenuFromFile("data/box.txt", renderer, gallery);
-    game = Game({0, 0, 950, 950}, 20);
+    editor = loadMenuFromFile("data/editEngine.txt", renderer, gallery);
+    game = Game({0, 0, 800, 800}, 4);
     game.TSPInit();
+    game.SolveTSP();
+    menu.updateBothButton("NPoints", "NPoints: " + std::to_string(game.getNumberOfVertexes()));
+    menu.updateBothButton("MinimumDistance", std::to_string(game.getAnswerValue()));
+    menu.updateBothButton("Hide/Show Paths", "Hide/Show Paths");
+    editor.updateBothButton("Editing Points", "Enter a number between 1 and 20: ");
 }
 
 void MainLoop::renderGame(SDL_Renderer* &renderer, Gallery &gallery, int mouseX, int mouseY) {
@@ -31,6 +37,12 @@ void MainLoop::renderGame(SDL_Renderer* &renderer, Gallery &gallery, int mouseX,
 
     case TRACKING: {
         game.tracking(mouseX, mouseY);
+        break;
+    }
+
+    case REWRITING: {
+        editor.renderMenu(renderer, gallery, mouseX, mouseY);
+        return;
         break;
     }
     
@@ -54,12 +66,58 @@ void MainLoop::handleUserInput(SDL_Event e, SDL_Renderer* &renderer, Gallery &ga
         case SDL_MOUSEBUTTONDOWN: {
             if (game.updateTarget(e.motion.x, e.motion.y)) {
                 updateGameState(TRACKING);
+            } else {
+                std::string pressedButton = menu.getPressedButton(e.motion.x, e.motion.y);
+                if (pressedButton == "NPoints") {
+                    inputNumber = 0;
+                    updateGameState(REWRITING);
+                } else if (pressedButton == "MinimumDistance") {
+
+                } else if (pressedButton == "Hide/Show Paths") {
+                    game.updateDrawingState();
+                } else {
+
+                }
             }
             break;
         }
 
         case SDL_MOUSEBUTTONUP: {
-            updateGameState(STARTING_SCREEN);
+            if (gameState == TRACKING) {
+                game.SolveTSP();
+                menu.updateBothButton("MinimumDistance", std::to_string(game.getAnswerValue()));
+                updateGameState(STARTING_SCREEN);
+            }
+            break;
+        }
+
+        case SDL_KEYDOWN: {
+            if (gameState == REWRITING) {
+                if (e.key.keysym.sym == SDLK_ESCAPE) {
+                    updateGameState(STARTING_SCREEN);
+                } else if (e.key.keysym.sym >= SDLK_0 and e.key.keysym.sym <= SDLK_9) {
+                    int tmp = inputNumber * 10 + e.key.keysym.sym - SDLK_0;
+                    if (tmp > 20 or tmp < 0) {
+                        break;
+                    }
+                    inputNumber = inputNumber * 10 + e.key.keysym.sym - SDLK_0;
+                    editor.updateBothButton("Editing Points", "Enter a number between 1 and 20: " + std::to_string(inputNumber));
+                } else if (e.key.keysym.sym == SDLK_BACKSPACE) {
+                    inputNumber /= 10;
+                    if (inputNumber == 0) {
+                        editor.updateBothButton("Editing Points", "Enter a number between 1 and 20: ");
+                    } else if (inputNumber > 0) {
+                        editor.updateBothButton("Editing Points", "Enter a number between 1 and 20: " + std::to_string(inputNumber));
+                    }
+                } else if (e.key.keysym.sym == SDLK_RETURN) {
+                    if (inputNumber > 0 and inputNumber <= 20) {
+                        menu.updateBothButton("NPoints", "NPoints: " + std::to_string(game.getNumberOfVertexes()));
+                        game.resize(inputNumber);
+                    }
+                    editor.updateBothButton("Editing Points", "Enter a number between 1 and 20: ");
+                    updateGameState(STARTING_SCREEN);
+                }
+            }
             break;
         }
 

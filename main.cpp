@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
         // Delay to maintain the current FPS
 
         frameTime = SDL_GetTicks() - frameStart;
-        std::cout << frameTime << std::endl;
+        // std::cout << frameTime << std::endl;
         if (frameTime < FRAME_DELAY) {
             SDL_Delay(FRAME_DELAY - frameTime);
         }

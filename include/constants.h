@@ -8,7 +8,7 @@
 
 // Standard library
 
-const int FPS = 45;
+const int FPS = 80;
 const int FRAME_DELAY = 1000 / FPS;
 const int SCREEN_WIDTH = 1260;
 const int SCREEN_HEIGHT = 810;

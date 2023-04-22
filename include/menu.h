@@ -42,6 +42,9 @@ public:
     Button(std::string buttonName, SDL_Rect buttonRect, Textbox _normal, Textbox _special);
     std::string getButtonName() { return buttonName; }
     bool isChoosing(int mouseX, int mouseY);
+    void updateBoth(std::string text) { updateNormal(text); updateSpecial(text); }
+    void updateNormal(std::string text) { normal.updateText(text); }
+    void updateSpecial(std::string text) { special.updateText(text); }
     void renderButton(SDL_Renderer* &renderer, Gallery& gallery, int mouseX, int mouseY);
 };
 
@@ -53,6 +56,9 @@ public:
     Menu(std::vector <std::string> _buttonName, std::vector <SDL_Rect> _buttonPosition, 
         std::vector <Textbox> normal, std::vector <Textbox> special);
     void renderMenu(SDL_Renderer* &renderer, Gallery& gallery, int mouseX, int mouseY);
+    void updateButtonNormal(std::string buttonName, std::string text);
+    void updateButtonSpecial(std::string buttonName, std::string text);
+    void updateBothButton(std::string buttonName, std::string text);
     std::string getPressedButton(int mouseX, int mouseY);
 };
 

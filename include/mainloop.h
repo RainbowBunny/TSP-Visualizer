@@ -12,11 +12,12 @@
 
 class MainLoop {
 private:
-    Menu menu;
+    Menu menu, editor;
     Background background;
     Game game;
 
     GameState gameState;
+    int inputNumber;
 public:
     MainLoop(SDL_Renderer* &renderer, Gallery &gallery);
     void updateGameState(GameState state) { gameState = state; }

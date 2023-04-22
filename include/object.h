@@ -29,7 +29,7 @@ class Point {
 private:
     int frame = 0;
     PictureID id = POINT;
-    int x, y, index, sz = 20;
+    int x, y, index, sz = 30;
 public:
     Point() {};
     Point(int _x, int _y) { x = _x; y = _y; }
@@ -41,6 +41,7 @@ public:
     int getIndex() { return index; }
     void renderPoint(SDL_Renderer* &renderer, Gallery &gallery);
     bool isBeingTracked(int mouseX, int mouseY);
+    float distance(Point B);
 };
 
 class Game {
@@ -49,16 +50,21 @@ private:
     SDL_Rect screen;
     std::vector <Point> listOfPoints;
     RandomGenerator randomGenerator;
+    std::vector <int> Answer;
+    bool drawingPath;
 public:
     Game() {}
     Game(SDL_Rect screenBoard, int numberOfPoints);
+    int getNumberOfVertexes() { return listOfPoints.size(); }
     void resize(int numberOfPoints);
     void renderGame(SDL_Renderer* &renderer, Gallery &gallery);
     bool updateTarget(int mouseX, int mouseY);
     void tracking(int mouseX, int mouseY);
     void writeData();
     void TSPInit();
-    std::vector <int> SolveTSP();
+    void SolveTSP();
+    void updateDrawingState() { drawingPath ^= 1; }
+    float getAnswerValue();
 };
 
 #endif

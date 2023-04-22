@@ -40,6 +40,34 @@ void Menu::renderMenu(SDL_Renderer* &renderer, Gallery& gallery, int mouseX, int
     }
 }
 
+void Menu::updateButtonNormal(std::string buttonName, std::string text) {
+    for (int i = 0; i < (int)buttonList.size(); i++) {
+        if (buttonList[i].getButtonName() == buttonName) {
+            buttonList[i].updateNormal(text);
+            break;
+        }
+    }
+}
+
+void Menu::updateButtonSpecial(std::string buttonName, std::string text) {
+    for (int i = 0; i < (int)buttonList.size(); i++) {
+        if (buttonList[i].getButtonName() == buttonName) {
+            buttonList[i].updateSpecial(text);
+            break;
+        }
+    }
+}
+
+void Menu::updateBothButton(std::string buttonName, std::string text) {
+    for (int i = 0; i < (int)buttonList.size(); i++) {
+        if (buttonList[i].getButtonName() == buttonName) {
+            buttonList[i].updateNormal(text);
+            buttonList[i].updateSpecial(text);
+            break;
+        }
+    }
+}
+
 Uint8 castingIntToUint8(int target) { return target % (1 << 8); }
 
 Menu loadMenuFromFile(std::string file, SDL_Renderer* &renderer, Gallery &gallery) {
