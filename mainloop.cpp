@@ -52,6 +52,15 @@ void MainLoop::renderGame(SDL_Renderer* &renderer, Gallery &gallery, int mouseX,
         
     }
 
+    if (gameState != TRACKING) {
+        if (game.getDrawState()) {
+            menu.updateBothButton("MinimumDistance", std::to_string(game.getAnswerValue()));
+        } else {
+            menu.updateBothButton("MinimumDistance", "");
+        }
+    }
+    
+
     menu.renderMenu(renderer, gallery, mouseX, mouseY);
     game.renderGame(renderer, gallery);
 }
@@ -74,6 +83,7 @@ void MainLoop::handleUserInput(SDL_Event e, SDL_Renderer* &renderer, Gallery &ga
                 } else if (pressedButton == "MinimumDistance") {
 
                 } else if (pressedButton == "Hide/Show Paths") {
+                    menu.updateBothButton("MinimumDistance", std::to_string(game.getAnswerValue()));
                     game.updateDrawingState();
                 } else {
 
@@ -85,7 +95,6 @@ void MainLoop::handleUserInput(SDL_Event e, SDL_Renderer* &renderer, Gallery &ga
         case SDL_MOUSEBUTTONUP: {
             if (gameState == TRACKING) {
                 game.SolveTSP();
-                menu.updateBothButton("MinimumDistance", std::to_string(game.getAnswerValue()));
                 updateGameState(STARTING_SCREEN);
             }
             break;
@@ -111,8 +120,9 @@ void MainLoop::handleUserInput(SDL_Event e, SDL_Renderer* &renderer, Gallery &ga
                     }
                 } else if (e.key.keysym.sym == SDLK_RETURN) {
                     if (inputNumber > 0 and inputNumber <= 20) {
-                        menu.updateBothButton("NPoints", "NPoints: " + std::to_string(game.getNumberOfVertexes()));
                         game.resize(inputNumber);
+                        menu.updateBothButton("NPoints", "NPoints: " + std::to_string(game.getNumberOfVertexes()));
+                        game.SolveTSP();
                     }
                     editor.updateBothButton("Editing Points", "Enter a number between 1 and 20: ");
                     updateGameState(STARTING_SCREEN);

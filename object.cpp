@@ -56,7 +56,8 @@ bool Point::isBeingTracked(int mouseX, int mouseY) {
 }
 
 float Point::distance(Point B) {
-    return sqrt(pow(x - B.getX(), 2) + pow(y - B.getY(), 2));
+    std::cout << sqrt(pow(x - B.getX(), 2) + pow(y - B.getY(), 2)) * 0.0264583333 << std::endl;
+    return sqrt(pow(x - B.getX(), 2) + pow(y - B.getY(), 2)) * 0.0264583333;
 }
 
 void Game::renderGame(SDL_Renderer* &renderer, Gallery &gallery) {
@@ -121,6 +122,10 @@ void Game::SolveTSP() {
         for (int j = 0; j < n; j++) {
             d[i][j] = listOfPoints[i].distance(listOfPoints[j]);
         }
+    }
+
+    for (int i = 0; i < n; i++) {
+        Answer[i] = i;
     }
 
     float bestRoute = 1e9;

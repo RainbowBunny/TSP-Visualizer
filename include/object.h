@@ -63,6 +63,7 @@ public:
     void writeData();
     void TSPInit();
     void SolveTSP();
+    bool getDrawState() { return drawingPath; }
     void updateDrawingState() { drawingPath ^= 1; }
     float getAnswerValue();
 };
